@@ -1,2 +1,11 @@
 # jiao-ni-chao-gu-piao
-缠中说禅《教你炒股票》系列博客文章原文整理、学习路径指引
+
+### 指引篇
+
++ [jioanic01: 大回馈撒娇](/dsa/dsa)
++ [jioanic01: 大回馈撒娇](/dsa/dsa)
+
+### 概念篇
+
++ [jioanic01: 大回馈撒娇](/dsa/dsa)
+

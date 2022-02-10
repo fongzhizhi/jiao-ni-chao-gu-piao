@@ -11,12 +11,33 @@
     color: #117785;
   }
 
-  #readme {
+  #readme, #content {
     text-align: left;
     width: 80%;
     margin: 0 auto;
     padding: 0 20px;
     border: solid #a2a4b1 1px;
     background: #f9f9f9;
+  }
+  #readme {
+    height: 300px;
+    overflow: auto;
+  }
+  #content {
+    margin-top: 15px;
+    border-bottom-width: 10px;
+    background: aliceblue;
+    min-height: 300px;
+  }
+  .error {
+    color: red;
+  }
+  .info {
+    color: green;
+  }
+  #footer {
+    p {
+      margin-bottom: 0;
+    }
   }
 }

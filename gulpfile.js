@@ -197,11 +197,25 @@ function watchTask(cb) {
 }
 
 /**
+ * 执行爬虫脚本
+ */
+function run_crawl(cb) {
+  const isExist = fs.existsSync(path.resolve(__dirname, "./crawler_caches"));
+  if (isExist) {
+    return cb();
+  }
+  return gulpPlugins.run("npm run crawl").exec();
+}
+
+/**
  * 构建
  */
-exports.build = series(
-  cleanDist,
-  parallel(htmlCompiler, styleCompiler, scriptCompiler, assetsCopy, watchTask)
+exports.build = parallel(
+  run_crawl,
+  series(
+    cleanDist,
+    parallel(htmlCompiler, styleCompiler, scriptCompiler, assetsCopy, watchTask)
+  )
 );
 exports.buildProd = series(setProdEnv, exports.build);
 /**
@@ -220,4 +234,4 @@ exports.prod = series(exports.buildProd, exports.server);
 /**
  * 测试
  */
-exports.test = parallel(scriptCompiler);
+exports.test = parallel(run_crawl);

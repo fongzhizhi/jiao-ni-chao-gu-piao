@@ -18,8 +18,8 @@ function collectUrl() {
         } else {
           const $ = res.$;
           // 查询文章
-          const artcles = $(".articleList .atc_title > a");
-          artcles.map((i, el) => {
+          const articles = $(".articleList .atc_title > a");
+          articles.map((i, el) => {
             const title = el.firstChild && el.firstChild.data;
             const url = el.attribs && el.attribs.href;
             if (url && title && title.trim().startsWith("教你炒股票")) {
@@ -56,9 +56,10 @@ function collectUrl() {
 /**
  * 收集文章
  */
-async function collectArticle() {
+async function collectArticle(downloadPath) {
+  downloadPath =
+    downloadPath || path.resolve(__dirname, "../../crawler_caches");
   const map = await collectUrl();
-  const downloadPath = path.resolve(__dirname, "../../dist");
   const c = new Crawler({
     callback: (err, res, done) => {
       if (err) {
@@ -75,7 +76,7 @@ async function collectArticle() {
         }
         const content = getParagraphs(contentBody);
         // 转换为markdown文档
-        createMarkdDownFile({
+        createMarkDownFile({
           title,
           sourceUrl,
           content,
@@ -127,7 +128,7 @@ function getParagraphs(contentBody) {
  * 生成markdown文档
  * @param {{title: string; sourceUrl: string; content: string; timer: string; downloadPath?: string;}} opts
  */
-function createMarkdDownFile(opts) {
+function createMarkDownFile(opts) {
   const newLine = os.EOL;
   // title
   let mdStr = "## " + opts.title + newLine;
