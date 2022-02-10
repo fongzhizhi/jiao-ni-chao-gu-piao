@@ -3,6 +3,8 @@ const fs = require("fs-extra");
 const path = require("path");
 const os = require("os");
 
+const defaultDownloadPath = path.resolve(__dirname, "../../crawler_caches");
+
 /**
  * 收集请求路径
  * @returns {Promise<{title: string;url: string;}[]>}
@@ -57,9 +59,17 @@ function collectUrl() {
  * 收集文章
  */
 async function collectArticle(downloadPath) {
-  downloadPath =
-    downloadPath || path.resolve(__dirname, "../../crawler_caches");
+  downloadPath = downloadPath || defaultDownloadPath;
   const map = await collectUrl();
+
+  // 缓存文章信息
+  const info = {};
+  map.forEach((item) => {
+    item.title.match(/.+(\d+)/);
+    info[RegExp.$1 || item.title] = item;
+  });
+  // todo
+
   const c = new Crawler({
     callback: (err, res, done) => {
       if (err) {
