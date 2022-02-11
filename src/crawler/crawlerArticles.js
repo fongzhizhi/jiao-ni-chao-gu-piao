@@ -113,7 +113,9 @@ async function collectArticle(downloadPath) {
  * @param contentBody {cheerio.Cheerio}
  */
 function getParagraphs(contentBody) {
-  const fonts = contentBody.find('.articalContent font[size="3"]');
+  const fonts = contentBody.find(
+    ".articalContent > div > p, .articalContent > div > font"
+  );
   let res = "";
   fonts.map((i, item) => {
     const paragraph = getChildContent(item, "");

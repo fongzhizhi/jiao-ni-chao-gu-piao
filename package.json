@@ -1,5 +1,5 @@
 {
-  "name": "webapp-quick-start",
+  "name": "jiao-ni-chao-gu-piao",
   "version": "1.0.0",
   "description": "切换分支，选择你的喜欢的构建工具流，快速启用你的前端应用。",
   "main": "index.js",
@@ -56,13 +56,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fongzhizhi/webapp-quick-start.git"
+    "url": "git+https://github.com/fongzhizhi/jiao-ni-chao-gu-piao.git"
   },
   "keywords": [],
   "author": "https://github.com/fongzhizhi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fongzhizhi/webapp-quick-start/issues"
+    "url": "https://github.com/fongzhizhi/jiao-ni-chao-gu-piao/issues"
   },
-  "homepage": "https://github.com/fongzhizhi/webapp-quick-start#readme"
+  "homepage": "https://github.com/fongzhizhi/jiao-ni-chao-gu-piao#readme"
 }

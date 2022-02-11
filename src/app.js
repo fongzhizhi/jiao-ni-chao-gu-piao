@@ -45,6 +45,7 @@ function directoryJump() {
     const title = item && item.title;
     if (!url && !title) {
       failCatch(url);
+      e.preventDefault();
       return;
     }
 

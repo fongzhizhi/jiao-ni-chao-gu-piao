@@ -8,6 +8,7 @@ const commonjs = require("@rollup/plugin-commonjs");
 const json = require("@rollup/plugin-json");
 const express = require("express");
 const gulpPlugins = require("gulp-load-plugins")();
+const os = require("os");
 
 /**
  * 全局配置
@@ -33,7 +34,7 @@ const appConfig = {
   /**输出路径 */
   dest: "dist",
   /**页面标题 */
-  page_title: "webapp-quick-start",
+  page_title: "教你炒股票学习路径指引",
   /**打包的css路径 */
   css_path: "index.css",
   /**打包的js路径 */
@@ -221,12 +222,97 @@ function run_crawl(cb) {
 }
 
 /**
+ * 生成readme.md文件
+ */
+function createReadMe(cb) {
+  // 文章索引
+  const articleIndex = [
+    {
+      title: '中枢理论前传',
+      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 103],
+    },
+    {
+      title: '引导篇',
+      items: [72],
+    },
+    {
+      title: '分型、笔、线段',
+      items: [62, 65, 67, 69, 71, 77, 78],
+    },
+    {
+      title: '中枢、走势和买卖点',
+      items: [17, 83, 18, 63, 20, 21, 35, 101, 102, 53, 56],
+    },
+    {
+      title: '背驰',
+      items: [24, 25, 27, 29, 37, 43, 44, 64, 61],
+    },
+    {
+      title: '同级别分解',
+      items: [33, 36, 38, 39, 40],
+    },
+    {
+      title: '实战操作与策略',
+      items: [26, 31, 32, 41, 45, 46, 47, 48, 49, 50, 55, 68, 73, 74, 92, 106, 107, 108],
+    },
+    {
+      title: '走势与买卖点的动态分析和立体分析',
+      items: [86, 70, 79, 82, 88, 89, 90, 91, 93, 99],
+    },
+    {
+      title: '心态',
+      items: [80, 19, 23, 34, 42, 94, 95, 96, 105],
+    },
+    {
+      title: '兵法',
+      items: [28, 51, 66, 97, 98, 100],
+    },
+    {
+      title: '中枢理论体系说明',
+      items: [30, 52, 81, 84],
+    },
+    {
+      title: '中枢理论未竟篇',
+      items: [104],
+    },
+    {
+      title: '缠中说禅市场杂说',
+      items: [22, 75, 76, 85, 87],
+    },
+    {
+      title: '线段概念出现之前的走势实例讲解',
+      items: [54, 57, 58, 59, 60, 61],
+    },
+  ];
+  // 创建md文件字符串
+  let mdStr = '# 《教你炒股票108课》文章指引' + os.EOL;
+  const jsonPath = path.resolve(__dirname, './crawler_caches/articleMap.json');
+  const exist = fs.existsSync(jsonPath);
+  const articleMap = exist ? JSON.parse(fs.readFileSync(jsonPath).toString()) : {};
+  const artilcePre = '教你炒股票';
+  articleIndex.forEach(item => {
+    const title = item.title;
+    let p = os.EOL + '## ' + title + os.EOL;
+    item.items.forEach(i => {
+      const article = articleMap[i] && articleMap[i].title || artilcePre + i;
+      p += os.EOL + '+ ' + `[${article}](${i})`;
+    });
+    p += os.EOL;
+    mdStr += p;
+  });
+  // 生成文件
+  fs.writeFileSync(path.resolve(__dirname, 'README.md'), mdStr);
+  cb();
+}
+
+/**
  * 构建
  */
 exports.build = parallel(
   run_crawl,
   series(
     cleanDist,
+    createReadMe,
     parallel(htmlCompiler, styleCompiler, scriptCompiler, assetsCopy, watchTask)
   )
 );
@@ -247,4 +333,4 @@ exports.prod = series(exports.buildProd, exports.server);
 /**
  * 测试
  */
-exports.test = parallel(run_crawl);
+exports.test = parallel(createReadMe);
