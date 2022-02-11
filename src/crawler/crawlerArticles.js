@@ -61,17 +61,12 @@ function collectUrl() {
 async function collectArticle(downloadPath) {
   downloadPath = downloadPath || defaultDownloadPath;
   const map = await collectUrl();
-
-  // 缓存文章信息
-  const info = {};
-  map.forEach((item) => {
-    item.title.match(/.+(\d+)/);
-    info[RegExp.$1 || item.title] = item;
-  });
-  // todo
+  const articleMap = {}; // 文章信息
+  let total = map.length;
 
   const c = new Crawler({
     callback: (err, res, done) => {
+      total--;
       if (err) {
         console.error(err);
       } else {
@@ -80,6 +75,13 @@ async function collectArticle(downloadPath) {
         // 收集信息
         const title = contentBody.find(".articalTitle .titName").text();
         const sourceUrl = res.options.uri;
+        // 文章title信息
+        title.match(/(\d+)/);
+        articleMap[RegExp.$1 || title] = {
+          title,
+          url: sourceUrl,
+        };
+
         let timer = contentBody.find(".articalTitle .time").text();
         if (timer.match(/\((.+)\)/)) {
           timer = RegExp.$1;
@@ -93,6 +95,11 @@ async function collectArticle(downloadPath) {
           timer,
           downloadPath,
         });
+      }
+      if (total <= 0) {
+        !fs.existsSync(downloadPath) && fs.mkdirSync(downloadPath);
+        const filePth = path.resolve(downloadPath, "articleMap.json");
+        fs.writeFileSync(filePth, JSON.stringify(articleMap, null, 2));
       }
       done();
     },
@@ -155,7 +162,7 @@ function createMarkDownFile(opts) {
   if (opts.downloadPath) {
     !fs.existsSync(opts.downloadPath) && fs.mkdirSync(opts.downloadPath);
     const filePth = path.resolve(opts.downloadPath, opts.title + ".md");
-    fs.writeFileSync(filePth, mdStr, {});
+    fs.writeFileSync(filePth, mdStr);
     console.log("[WritingFile", filePth);
   }
   return mdStr;

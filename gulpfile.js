@@ -165,6 +165,19 @@ function server(cb) {
   app.get("/readme", (req, res) => {
     res.send(fs.readFileSync(path.resolve(__dirname, "README.md")).toString());
   });
+  app.get("/crawler_caches/:title", (req, res) => {
+    const title = req.params.title;
+    console.log(req.params);
+    const file = title && path.resolve(__dirname, "crawler_caches/" + title + '.md');
+    console.log(file);
+    const exist = file && fs.existsSync(file);
+    if(!exist) {
+      res.status(500).send('Did not find title!');
+    } else {
+      res.send(fs.readFileSync(file).toString());
+    }
+  });
+
   app.listen(port, () => {
     const url = `http://localhost:${port}`;
     console.log("[server running]", `App listening at ${url}`);
